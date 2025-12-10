@@ -1,0 +1,186 @@
+﻿<UserControl x:Class="HesapMakinesi.Views.CalculatorView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:viewmodels="clr-namespace:HesapMakinesi.ViewModels"
+             xmlns:helpers="clr-namespace:HesapMakinesi.Helpers"
+             mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance Type=viewmodels:CalculatorViewModel}"
+             d:DesignHeight="700" d:DesignWidth="450">
+
+    <Grid>
+        <Grid.Resources>
+            <Style TargetType="{x:Type ScrollBar}" BasedOn="{StaticResource ModernScrollBarStyle}"/>
+        </Grid.Resources>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="{Binding ScientificRowHeight}"/>
+            <RowDefinition Height="{Binding ScientificRowHeight}"/>
+            <RowDefinition Height="{Binding ScientificRowHeight}"/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+
+        <Border Grid.Row="0" Grid.ColumnSpan="5" Background="{DynamicResource PanelBackgroundBrush}" BorderBrush="#888" BorderThickness="1" CornerRadius="2" Height="150" Margin="0,0,0,20">
+            <Grid>
+                <Border HorizontalAlignment="Right" VerticalAlignment="Top" Width="45" Height="30" Background="#D1E8FF" Margin="5" CornerRadius="3">
+                    <TextBlock Text="{Binding LastClickedButton}" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#005A9E" FontWeight="Bold" FontSize="14"/>
+                </Border>
+
+                <TextBox Text="{Binding DisplayText, UpdateSourceTrigger=PropertyChanged}" 
+                         helpers:AutoScrollBehavior.AutoScroll="True"
+                         helpers:CaretIndexHelper.CaretIndex="{Binding CaretIndex, Mode=TwoWay}"
+                         Foreground="{DynamicResource PrimaryTextBrush}" 
+                         Background="Transparent" BorderThickness="0" FontSize="48" FontWeight="Bold" 
+                         HorizontalAlignment="Right" VerticalAlignment="Bottom" TextAlignment="Right"
+                         Margin="10" CaretBrush="{DynamicResource PrimaryTextBrush}" Width="380" 
+                         TextWrapping="NoWrap" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" AcceptsReturn="False">
+
+                    <TextBox.InputBindings>
+                        <KeyBinding Key="Enter" Command="{Binding CalculateCommand}"/>
+
+                        <KeyBinding Key="Up" Command="{Binding MoveHistoryUpCommand}"/>
+                        <KeyBinding Key="Down" Command="{Binding MoveHistoryDownCommand}"/>
+                    </TextBox.InputBindings>
+                </TextBox>
+
+                <TextBlock Text="{Binding HistoryText}" Foreground="#A0A0A0" FontSize="20" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="10,35,10,0"/>
+            </Grid>
+        </Border>
+
+        <Grid Grid.Row="1" Grid.ColumnSpan="5" Margin="0,0,0,20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="1.5*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" Content="DEL" FontWeight="Bold" Style="{DynamicResource ModernButtonStyle}" Command="{Binding DeleteCommand}"/>
+
+            <Grid Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="40"/>
+                    <ColumnDefinition Width="40"/>
+                    <ColumnDefinition Width="40"/>
+                </Grid.ColumnDefinitions>
+
+                <Button Grid.Row="0" Grid.Column="1" Content="↑" Margin="1" Padding="0" 
+                        Style="{DynamicResource ModernButtonStyle}" MinHeight="0"
+                        Command="{Binding MoveHistoryUpCommand}"/>
+                <Button Grid.Row="1" Grid.Column="1" Content="↓" Margin="1" Padding="0" 
+                        Style="{DynamicResource ModernButtonStyle}" MinHeight="0"
+                        Command="{Binding MoveHistoryDownCommand}"/>
+                <Button Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Content="←" Margin="1" Padding="0" 
+                        Style="{DynamicResource ModernButtonStyle}" MinHeight="0"
+                        Command="{Binding MoveCaretLeftCommand}"/>
+                <Button Grid.Row="0" Grid.RowSpan="2" Grid.Column="2" Content="→" Margin="1" Padding="0" 
+                        Style="{DynamicResource ModernButtonStyle}" MinHeight="0"
+                        Command="{Binding MoveCaretRightCommand}"/>
+            </Grid>
+
+            <Button Grid.Column="2" 
+                    Content="C/AC" 
+                    FontWeight="Bold" 
+                    Foreground="#D9534F"
+                    Style="{DynamicResource ModernButtonStyle}" 
+                    Command="{Binding ProcessClearCommand}"
+                    ToolTip="Tek Tık: Temizle (C)&#x0a;Çift Tık: Her Şeyi Sıfırla (AC)"/>
+        </Grid>
+
+        <Button Grid.Row="2" Grid.Column="0" Content="7" Style="{DynamicResource ModernButtonStyle}" Command="{Binding NumberPressCommand}" CommandParameter="7"/>
+        <Button Grid.Row="2" Grid.Column="1" Content="8" Style="{DynamicResource ModernButtonStyle}" Command="{Binding NumberPressCommand}" CommandParameter="8"/>
+        <Button Grid.Row="2" Grid.Column="2" Content="9" Style="{DynamicResource ModernButtonStyle}" Command="{Binding NumberPressCommand}" CommandParameter="9"/>
+        <Button Grid.Row="2" Grid.Column="3" Content="ANS" FontWeight="Bold" Style="{DynamicResource ModernButtonStyle}"/>
+        <Button Grid.Row="2" Grid.Column="4" Content="=" FontWeight="Bold" Style="{DynamicResource ModernButtonStyle}" Command="{Binding CalculateCommand}"/>
+
+        <Button Grid.Row="3" Grid.Column="0" Content="4" Style="{DynamicResource ModernButtonStyle}" Command="{Binding NumberPressCommand}" CommandParameter="4"/>
+        <Button Grid.Row="3" Grid.Column="1" Content="5" Style="{DynamicResource ModernButtonStyle}" Command="{Binding NumberPressCommand}" CommandParameter="5"/>
+        <Button Grid.Row="3" Grid.Column="2" Content="6" Style="{DynamicResource ModernButtonStyle}" Command="{Binding NumberPressCommand}" CommandParameter="6"/>
+        <Button Grid.Row="3" Grid.Column="3" Content="X" FontWeight="Bold" Style="{DynamicResource ModernButtonStyle}" Command="{Binding OperatorPressCommand}" CommandParameter="X"/>
+        <Button Grid.Row="3" Grid.Column="4" Content="/" FontWeight="Bold" Style="{DynamicResource ModernButtonStyle}" Command="{Binding OperatorPressCommand}" CommandParameter="/"/>
+
+        <Button Grid.Row="4" Grid.Column="0" Content="1" Style="{DynamicResource ModernButtonStyle}" Command="{Binding NumberPressCommand}" CommandParameter="1"/>
+        <Button Grid.Row="4" Grid.Column="1" Content="2" Style="{DynamicResource ModernButtonStyle}" Command="{Binding NumberPressCommand}" CommandParameter="2"/>
+        <Button Grid.Row="4" Grid.Column="2" Content="3" Style="{DynamicResource ModernButtonStyle}" Command="{Binding NumberPressCommand}" CommandParameter="3"/>
+        <Button Grid.Row="4" Grid.Column="3" Content="+" FontWeight="Bold" Style="{DynamicResource ModernButtonStyle}" Command="{Binding OperatorPressCommand}" CommandParameter="+"/>
+        <Button Grid.Row="4" Grid.Column="4" Content="-" FontWeight="Bold" Style="{DynamicResource ModernButtonStyle}" Command="{Binding OperatorPressCommand}" CommandParameter="-"/>
+
+        <Button Grid.Row="5" Grid.Column="0" Content="0" Style="{DynamicResource ModernButtonStyle}" Command="{Binding NumberPressCommand}" CommandParameter="0"/>
+        <Button Grid.Row="5" Grid.Column="1" Content="." Style="{DynamicResource ModernButtonStyle}" Command="{Binding NumberPressCommand}" CommandParameter="."/>
+        <Button Grid.Row="5" Grid.Column="2" Content="%" Style="{DynamicResource ModernButtonStyle}" Command="{Binding ScientificOperatorCommand}" CommandParameter="%"/>
+        <Button Grid.Row="5" Grid.Column="3" Content="(" Style="{DynamicResource ModernButtonStyle}" Command="{Binding NumberPressCommand}" CommandParameter="("/>
+        <Button Grid.Row="5" Grid.Column="4" Content=")" Style="{DynamicResource ModernButtonStyle}" Command="{Binding NumberPressCommand}" CommandParameter=")"/>
+
+        <Button Grid.Row="6" Grid.Column="0" Content="xʸ" Style="{DynamicResource ModernButtonStyle}" Command="{Binding ScientificOperatorCommand}" CommandParameter="^"/>
+        <Button Grid.Row="6" Grid.Column="1" Content="ʸ√x" Style="{DynamicResource ModernButtonStyle}" Command="{Binding ScientificOperatorCommand}" CommandParameter="yroot"/>
+        <Button Grid.Row="6" Grid.Column="2" Content="x⁻¹" Style="{DynamicResource ModernButtonStyle}" Command="{Binding ScientificOperatorCommand}" CommandParameter="x⁻¹"/>
+        <Button Grid.Row="6" Grid.Column="3" Content="|x|" Style="{DynamicResource ModernButtonStyle}" Command="{Binding ScientificOperatorCommand}" CommandParameter="abs" Visibility="{Binding ScientificPanelVisibility}"/>
+        <Button Grid.Row="6" Grid.Column="4" Content="Mod" Style="{DynamicResource ModernButtonStyle}" Command="{Binding ScientificOperatorCommand}" CommandParameter="Mod" Visibility="{Binding ScientificPanelVisibility}"/>
+
+        <Button Grid.Row="7" Grid.Column="0" Content="{Binding SinText}" Style="{DynamicResource ModernButtonStyle}" Command="{Binding ScientificOperatorCommand}" CommandParameter="sin" Visibility="{Binding ScientificPanelVisibility}"/>
+        <Button Grid.Row="7" Grid.Column="1" Content="{Binding CosText}" Style="{DynamicResource ModernButtonStyle}" Command="{Binding ScientificOperatorCommand}" CommandParameter="cos" Visibility="{Binding ScientificPanelVisibility}"/>
+        <Button Grid.Row="7" Grid.Column="2" Content="{Binding TanText}" Style="{DynamicResource ModernButtonStyle}" Command="{Binding ScientificOperatorCommand}" CommandParameter="tan" Visibility="{Binding ScientificPanelVisibility}"/>
+        <Button Grid.Row="7" Grid.Column="3" Content="{Binding AngleModeText}" Style="{DynamicResource ModernButtonStyle}" FontWeight="Bold" Foreground="{DynamicResource AccentBrush}" Command="{Binding ToggleAngleModeCommand}" Visibility="{Binding ScientificPanelVisibility}"/>
+        <Button Grid.Row="7" Grid.Column="4" Content="2nd" Style="{DynamicResource ModernButtonStyle}" FontWeight="Bold" Foreground="#FF8C00" Command="{Binding ToggleSecondFunctionCommand}" Visibility="{Binding ScientificPanelVisibility}"/>
+
+        <Button Grid.Row="8" Grid.Column="0" Content="logᵧx" Style="{DynamicResource ModernButtonStyle}" Command="{Binding ScientificOperatorCommand}" CommandParameter="logy"/>
+        <Button Grid.Row="8" Grid.Column="1" Content="ln" Style="{DynamicResource ModernButtonStyle}" Command="{Binding ScientificOperatorCommand}" CommandParameter="ln"/>
+        <Button Grid.Row="8" Grid.Column="2" Content="n!" Style="{DynamicResource ModernButtonStyle}" Command="{Binding ScientificOperatorCommand}" CommandParameter="n!"/>
+        <Button Grid.Row="8" Grid.Column="3" Content="π" Style="{DynamicResource ModernButtonStyle}" Command="{Binding ScientificOperatorCommand}" CommandParameter="π" Visibility="{Binding ScientificPanelVisibility}"/>
+        <Button Grid.Row="8" Grid.Column="4" Content="e" Style="{DynamicResource ModernButtonStyle}" Command="{Binding ScientificOperatorCommand}" CommandParameter="e" Visibility="{Binding ScientificPanelVisibility}"/>
+
+        <Border x:Name="HistoryPanel"
+                Grid.Row="0" Grid.RowSpan="10" Grid.Column="5"
+                Width="300"
+                Background="{DynamicResource PanelBackgroundBrush}" 
+                BorderBrush="#888" BorderThickness="1,0,0,0"
+                Visibility="{Binding HistoryPanelVisibility}">
+
+            <Grid Margin="15">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" Text="İşlem Geçmişi" FontWeight="Bold" FontSize="20" 
+                           Foreground="{DynamicResource PrimaryTextBrush}" Margin="0,0,0,15"/>
+
+                <ListBox Grid.Row="1" ItemsSource="{Binding HistoryLogs}" 
+                         Background="Transparent" BorderThickness="0" 
+                         Foreground="{DynamicResource PrimaryTextBrush}" 
+                         Opacity="0.7"
+                         FontSize="16">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding}" Margin="5"/>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+
+                <Button Grid.Row="2" Content="🗑 Geçmişi Temizle" 
+                        Style="{DynamicResource ModernButtonStyle}" 
+                        Height="40" Margin="0,15,0,0" 
+                        Command="{Binding ClearHistoryLogsCommand}"/>
+            </Grid>
+        </Border>
+
+    </Grid>
+</UserControl>

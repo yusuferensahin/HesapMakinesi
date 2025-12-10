@@ -1,0 +1,40 @@
+﻿<UserControl x:Class="HesapMakinesi.Views.HistoryView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="300">
+
+    <Border Background="{DynamicResource PanelBackgroundBrush}" 
+            BorderBrush="#888" BorderThickness="1,0,0,0">
+
+        <Grid Margin="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0" Text="İşlem Geçmişi" FontWeight="Bold" FontSize="18" 
+                       Foreground="{DynamicResource PrimaryTextBrush}" Margin="0,0,0,10"/>
+
+            <ListBox Grid.Row="1" ItemsSource="{Binding HistoryLogs}" 
+                     Background="Transparent" BorderThickness="0" 
+                     Foreground="{DynamicResource PrimaryTextBrush}" 
+                     Opacity="0.7"
+                     FontSize="16">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding}" Margin="5"/>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+
+            <Button Grid.Row="2" Content="🗑 Temizle" 
+                    Style="{DynamicResource ModernButtonStyle}" 
+                    Height="40" Margin="0,10,0,0" 
+                    Command="{Binding ClearHistoryLogsCommand}"/>
+        </Grid>
+    </Border>
+</UserControl>
